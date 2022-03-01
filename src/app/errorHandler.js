@@ -11,6 +11,10 @@ const errorHandle = async (error, ctx) => {
       status = 409 // 数据冲突
       message = error.message
       break
+    case errorType.ERROR_LOGIN:
+      status = 500
+      message = error.message
+      break
     default:
       status = 404
       message = 'not found ~~~~~'

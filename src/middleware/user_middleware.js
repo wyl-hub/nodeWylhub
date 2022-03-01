@@ -1,6 +1,7 @@
 const { ERROR_USER, ERROR_CONFLICT } = require('../utils/contans')
 const userService = require('../service/user_service')
-const vertify = async (ctx, next) => {
+
+const verifyUser = async (ctx, next) => {
   // 获取用户名和密码
   const { name, password } = ctx.request.body
   // 用户名和密码都不能为空
@@ -19,5 +20,5 @@ const vertify = async (ctx, next) => {
 
 
 module.exports = {
-  vertify
+  verifyUser
 }
