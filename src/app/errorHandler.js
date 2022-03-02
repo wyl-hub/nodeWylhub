@@ -15,6 +15,10 @@ const errorHandle = async (error, ctx) => {
       status = 500
       message = error.message
       break
+    case errorType.ERROR_TOKEN:
+      status = 401
+      message = error.message
+      break
     default:
       status = 404
       message = 'not found ~~~~~'
