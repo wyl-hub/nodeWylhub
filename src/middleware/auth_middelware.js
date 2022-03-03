@@ -6,6 +6,7 @@ const crypto = require('crypto')
 
 const PRIVATE_KEY = 'wyl111'
 
+// 验证登陆
 const verifyLogin = async (ctx, next) => {
   const { name, password } = ctx.request.body
   // 判断 name psw 是否为空 
@@ -26,9 +27,13 @@ const verifyLogin = async (ctx, next) => {
   if (newPassword !== mysqlPsw) {
     return throwError(ERROR_LOGIN, ctx)
   }
+  ctx.user = {
+    id: result[0].id
+  }
   await next()
 }
 
+// 验证token是否授权
 const verifyToken = async (ctx, next) => {
   let { authorization } = ctx.request.header
   if (!authorization) return throwError(ERROR_TOKEN, ctx)
@@ -37,7 +42,12 @@ const verifyToken = async (ctx, next) => {
   try {
     // 校验通过 保存 user 信息
     const result = jwt.verify(authorization, PRIVATE_KEY)
-    ctx.user = result
+    const { name } = result
+    const user = await userService.getUserByName(name)
+    ctx.user = {
+      id: user[0].id,
+      name: user[0].name
+    }
   } catch {
     return throwError(ERROR_TOKEN, ctx)
   }

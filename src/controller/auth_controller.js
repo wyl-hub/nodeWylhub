@@ -11,7 +11,7 @@ class AuthController {
       expiresIn: 60 * 60 * 24
     })
     ctx.body = {
-      ...user,
+      name: user.name,
       token
     }
   }

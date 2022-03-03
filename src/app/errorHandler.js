@@ -16,6 +16,7 @@ const errorHandle = async (error, ctx) => {
       message = error.message
       break
     case errorType.ERROR_TOKEN:
+    case errorType.ERROR_OPT:
       status = 401
       message = error.message
       break
