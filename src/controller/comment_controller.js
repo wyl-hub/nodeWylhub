@@ -1,4 +1,4 @@
-const commentService = require('../service/commetn_service')
+const commentService = require('../service/comment_service')
 class CommentController {
     // 发表评论(评论动态)   momentId  userId content
     async create(ctx, next) {
