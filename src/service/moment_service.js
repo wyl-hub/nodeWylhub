@@ -19,7 +19,8 @@ class MomentService {
     async getMomentList(offset, size) {
         const statement = `SELECT m.id momentId, m.content content, m.createAt createTime, m.updateAt updateTime,
         JSON_OBJECT('id', u.id, 'name', u.name) user,
-        (SELECT COUNT(*) FROM comment c WHERE c.moment_id = m.id) commentCount
+        (SELECT COUNT(*) FROM comment c WHERE c.moment_id = m.id) commentCount,
+        (SELECT COUNT(*) FROM moment_tag mt WHERE mt.moment_id = m.id) tagCount
         FROM moment m 
         LEFT JOIN users u ON m.user_id = u.id
         LIMIT ?, ?;`
@@ -37,6 +38,24 @@ class MomentService {
 
     async deleteMoment(momentId) {
         const statement = `DELETE FROM moment WHERE id = ?;`
+        const result = await connection.execute(statement, [momentId])
+        return result
+    }
+
+    async getMomentAndComment(momentId) {
+        const statement = `
+        SELECT m.id momentId, m.content content, m.createAt createTime, m.updateAt updateTime,
+        JSON_OBJECT('id', u.id, 'name', u.name) user,
+        JSON_ARRAYAGG(
+            JSON_OBJECT('id', c.id, 'content', c.content, 'createTime', c.createAt, 'commentId', c.comment_id,
+                'user', JSON_OBJECT('id', cu.id, 'name', cu.name)
+            )
+        ) commentList
+        FROM moment m 
+        LEFT JOIN users u ON m.user_id = u.id
+        LEFT JOIN comment c ON m.id = c.moment_id
+        LEFT JOIN users cu ON c.user_id = cu.id
+        WHERE m.id = ? GROUP BY m.id;`
         const result = await connection.execute(statement, [momentId])
         return result
     }

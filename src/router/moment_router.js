@@ -4,8 +4,14 @@ const {
   getDetail,
   getMomentList,
   updateMoment,
-  deleteMoment
+  deleteMoment,
+  getMomentAndComment,
+  addTags
 } = require('../controller/moment_controller')
+
+const {
+  ifExist
+} = require('../middleware/tag_middleware')
 
 const {
   verifyToken
@@ -21,6 +27,11 @@ momentRouter.post('/', verifyToken, create)
 // 获取某一条动态详情
 momentRouter.get('/getDetail', getDetail)
 
+// 获取动态详情时顺带获取该动态下面的所有评论 
+// 或者 该动态下所有评论为一个新接口
+
+momentRouter.get('/getMomentAndComment', getMomentAndComment)
+
 // 获取动态列表
 momentRouter.get('/getMomentList', getMomentList)
 
@@ -29,5 +40,8 @@ momentRouter.post('/updateMoment', verifyToken, verifyPermission('moment'), upda
 
 // 删除动态
 momentRouter.get('/deleteMoment', verifyToken, verifyPermission('moment'), deleteMoment)
+
+// 给动态添加标签
+momentRouter.post('/addTags', verifyToken, verifyPermission('moment'), ifExist, addTags)
 
 module.exports = momentRouter

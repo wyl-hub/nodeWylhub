@@ -40,6 +40,16 @@ class MomentController {
     ctx.body = result
   }
 
+  async getMomentAndComment(ctx, next) {
+    const { id } = ctx.request.query
+    const [result] = await momentService.getMomentAndComment(id)
+    ctx.body = result
+  }
+
+  async addTags(ctx, next) {
+    ctx.body = '标签添加成功！'
+  }
+
 }
 
 module.exports = new MomentController()

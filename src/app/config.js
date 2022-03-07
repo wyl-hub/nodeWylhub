@@ -8,5 +8,6 @@ module.exports = {
   MYSQL_PORT,
   MYSQL_DATABASE,
   MYSQL_ROOT,
-  MYSQL_PASSWORD
+  MYSQL_PASSWORD,
+  AVATAR_PATH
 } = process.env
